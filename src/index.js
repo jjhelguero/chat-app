@@ -38,12 +38,16 @@ io.on('connection', (socket) => {
         if(filter.isProfane(message)) {
             return callback('Naughty Naughty')
         }
-        io.to('room').emit('message', generateMessage(message))
+
+        const user = getUser(socket.id)
+
+        io.to(user.room).emit('message', generateMessage(message))
         callback()
     })
 
     socket.on('sendLocation', (coords, callback) => {
-        io.emit('locationMessage', generateLocationMessage(coords))
+        const user = getUser(socket.id)
+        io.to(user.room).emit('locationMessage', generateLocationMessage(coords))
         callback()
     })
 
