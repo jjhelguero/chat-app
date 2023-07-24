@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
         socket.join(user.room)
 
         socket.emit('message', generateMessage('Welcome!'))
-        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined.`))
+        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined.`))
         callback()
     })
 
@@ -41,13 +41,13 @@ io.on('connection', (socket) => {
 
         const user = getUser(socket.id)
 
-        io.to(user.room).emit('message', generateMessage(message))
+        io.to(user.room).emit('message', generateMessage(user.username, message))
         callback()
     })
 
     socket.on('sendLocation', (coords, callback) => {
         const user = getUser(socket.id)
-        io.to(user.room).emit('locationMessage', generateLocationMessage(coords))
+        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, coords))
         callback()
     })
 
